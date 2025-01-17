@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Gesture Recognition System</title>
+
+    <script src="https://kit.fontawesome.com/a658a7b479.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="../docs/logo.png">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Navigation Bar Styling */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .navbar h5 a.logo {
+            color: #ff9900;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+
+        .navbar-toggle {
+            display: none;
+        }
+
+        .main-nav {
+            display: flex;
+            list-style: none;
+        }
+
+        .main-nav li {
+            margin-left: 20px;
+        }
+
+        .nav-links {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .nav-links:hover,
+        .orange {
+            color: #ff9900;
+        }
+
+        /* Table Styling */
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Responsive Navbar */
+        @media (max-width: 768px) {
+            .navbar-toggle {
+                display: inline-block;
+            }
+
+            .main-nav {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: #333;
+                position: absolute;
+                top: 60px;
+                left: 0;
+            }
+
+            .main-nav li {
+                margin: 0;
+                padding: 15px;
+                border-top: 1px solid #444;
+            }
+
+            .main-nav li:first-child {
+                border-top: none;
+            }
+
+            .main-nav.show {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <span class="navbar-toggle" id="js-navbar-toggle">
+            <button class="togglebtn" onClick="buttonclicked()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </span>
+        <h5><a href="../index.html" class="logo">Hand Gesture Recognition System</a></h5>
+        <ul class="main-nav" id="js-menu">
+            <li><a href="../index.html" class="nav-links">Tutorials</a></li>
+            <li><a href="Training.html" class="nav-links">Training</a></li>
+            <li><a href="../temp/Model/Model.html" class="nav-links">Hand Gesture Detection</a></li>
+            <li><a href="./About.html" class="nav-links orange">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- Student Details Section -->
+    <h2 style="text-align:center; margin: 20px 0; color: #333;">Student Details</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Roll Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Prof.DineshKumar P.</b></td>
+                <td><b>Guide</b></td>
+            </tr>
+            <tr>
+                <td>Prathmesh Gajanan Sose</td>
+                <td>44</td>
+            </tr>
+            <tr>
+                <td>Rohit Rajendra Gaikwad</td>
+                <td>43</td>
+            </tr>
+            <tr>
+                <td>Sujit Bhauso Chavan</td>
+                <td>45</td>
+            </tr>
+            <tr>
+                <td>Jay Sanjay Ithape</td>
+                <td>50</td>
+            </tr>
+            <tr>
+                <td>Om Sedge</td>
+                <td>42</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <script>
+        // Toggle Navbar for Mobile View
+        function buttonclicked() {
+            const menu = document.getElementById("js-menu");
+            menu.classList.toggle("show");
+        }
+    </script>
+</body>
+
+</html>
