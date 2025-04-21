@@ -1,4 +1,4 @@
-<html>
+<!-- <html>
 <head>
     <title>live detection</title>
 
@@ -294,4 +294,204 @@
     <script src="sketch.js"></script>
 </body>
 
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Hand Gesture Detection</title>
+
+    <!-- External JS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.3.1/dist/ml5.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <link rel="icon" type="image/png" href="docs/logo.png">
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #222222;
+            padding: 14px 20px;
+            position: relative;
+        }
+
+        .navbar a {
+            color: #f2f2f2;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 14px 16px;
+            display: inline-block;
+        }
+
+        .navbar a:hover {
+            color: #ff9900;
+            background-color: #444444;
+            border-radius: 4px;
+        }
+
+        .navbar .logo {
+            font-weight: bold;
+            font-size: 24px;
+            color: #ff9900;
+            text-transform: uppercase;
+        }
+
+        .navbar .menu {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        /* Hamburger Icon for Mobile */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .hamburger i {
+            color: #f2f2f2;
+            font-size: 28px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .navbar .menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar .menu a {
+                padding: 12px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .navbar .menu.show {
+                display: block;
+            }
+
+            .hamburger {
+                display: block;
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">Hand Gesture Recognition</a>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="menu" id="menu">
+            <a href="index.html">Home</a>
+            <a href="templates/Training.html">Training</a>
+            <a href="Model.html">Hand Gesture Detection</a>
+            <a href="templates/About.html">About</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="alert alert-success">
+        Recommeded to use in a white diagram and please show only the hand into the camera.
+    </div>
+
+    <h1 class="myheading" style="font-weight: bolder;"><i style="color:#ff9900;" class="fas fa-hand-sparkles"></i> Practice Alphabets And Words</h1><br>
+
+    <div class="body" style="width: 1000px; position: relative; bottom: 50px;">
+        <div class="container border pred p-2 w-1 shadow-lg p-3 mb-5 bg-white rounded" style="width: 400px;">
+            <button id="buttonPredict" class="btn btn-dark" data-toggle="button" style="color: #ff9900;">Start Practicing!</button><br />
+            <br>
+            <p style="color:red;">Note: We currently support 21 signs [ASL]</p>
+            <p style="font-weight: bold;">Corresponding Word/Letter: <span style="font-weight: bold;" id="result"></span><br />Accuracy: <span id="confidence"></span></p>
+        </div>
+
+        <script>
+            function myFunction() {
+                var x = document.getElementById("myTopnav");
+                if (x.className === "topnav") {
+                    x.className += " responsive";
+                } else {
+                    x.className = "topnav";
+                }
+            }
+        </script>
+
+        <div id="videoContainer"></div>
+    </div>
+
+    <div class="container1 pred1 rounded" style="width: 400px;">
+        <img src="static/images/sign.jpg" style="border: 2px solid #ff9900 ;visibility: hidden;" width="300px" height="400px;">
+    </div>
+
+    <div class="hide" style="display: none;">
+        <p><span id="modelStatus">Loading MobileNet</span></p>
+        <button id="A">Add A</button><span id="A">0</span> A<br />
+        <button id="B">Add B</button><span id="B">0</span> B<br />
+        <button id="C">Add C</button><span id="C">0</span> C<br />
+        <button id="D">Add D</button><span id="D">0</span> D<br />
+        <button id="E">Add E</button><span id="E">0</span> E<br />
+        <button id="F">Add F</button><span id="F">0</span> F<br />
+        <button id="G">Add G</button><span id="G">0</span> G<br />
+        <button id="H">Add H</button><span id="H">0</span> H<br />
+        <button id="L">Add L</button><span id="L">0</span> L<br />
+        <button id="O">Add O</button><span id="O">0</span> O<br />
+        <button id="P">Add P</button><span id="P">0</span> P<br />
+        <button id="V">Add V</button><span id="V">0</span> V<br />
+        <button id="W">Add W</button><span id="W">0</span> W<br />
+        <button id="Y">Add Y</button><span id="Y">0</span> Y<br />
+        <button id="Ok">Add Ok</button><span id="Ok">0</span> Ok<br />
+        <button id="Bad">Add Bad</button><span id="Bad">0</span> Bad<br />
+        <button id="I_love_you">Add I love You</button><span id="I_love_you">0</span> I love you<br />
+        <button id="Good">Add Good</button><span id="Good">0</span> Good<br />
+        <button id="Hello">Add Hello</button><span id="Hello">0</span> Hello<br />
+        <button id="That">Add That</button><span id="That">0</span> That<br />
+        <br />
+        <button id="train">Train</button><span id="loss"></span>
+    </div>
+
+    <p style="display: none;">
+        <button id="save">Save Model</button>
+        <label for="avatar">Load Model:</label>
+        <input type="file" id="load" multiple />
+    </p>
+
+    <script src="sketch.js"></script>
+
+    <!-- JavaScript for Hamburger Menu Toggle -->
+    <script>
+        const hamburger = document.getElementById("hamburger");
+        const menu = document.getElementById("menu");
+
+        hamburger.addEventListener("click", function() {
+            menu.classList.toggle("show");
+        });
+    </script>
+
+</body>
 </html>
